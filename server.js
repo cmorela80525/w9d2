@@ -69,10 +69,16 @@ app.put('/logs/:id', (req, res) => {
       } else {
         req.body.readyToEat = false;
       }
-      Log.updateOne({_id: req.params.id}, req.body)
+      Log.updateOne({_id: req.params.id}, req.body, (error, data) => {
+        if (error) {
+            console.error(error)
+            res.json({error: error})
+        } else {
       res.redirect('/logs/')
-})
-
+    }
+   }
+  );
+});
 //Create
 app.post('/logs', (req, res) => {
     if (req.body.shipIsBroken === 'on') {
