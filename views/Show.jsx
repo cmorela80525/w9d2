@@ -5,7 +5,8 @@ const Show = (props) => {
       <div>
           <a href='/logs'>Home</a>
       <h1>Show Page</h1>
-      The {props.log.name} is {props.log.color}
+      {props.log.title} <br></br>
+      {props.log.entry} <br></br>
       {props.log.shipIsBroken ? ' Ship is broken' : 'Ship is not broken'}
       </div>
     )

@@ -14,7 +14,7 @@ const Index = (props) => {
             {props.logs.map((log, index) => {
               return (
                 <li key={index}>
-                    {log.title} <br></br> 
+                    <a href={`/logs/${log._id}`}>{log.title}</a> <br></br> 
                     {log.entry} <br></br>
                     {log.shipIsBroken ? ' Ship is broken ' : 'Ship is not broken '} <br></br>
                     <a href={`/logs/${log._id}/edit`}>Edit This Log</a>
