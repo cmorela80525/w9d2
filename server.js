@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const mongoose = require('mongoose')
 const Log = require('./models/Log.js')
-// const methodOverride = requrie('method-override')
+const methodOverride = require('method-override')
 
 //------------------------------------
 //Mongoose Connection Stuff
@@ -35,7 +35,7 @@ app.use(express.urlencoded({extended:false}))
 //Method Override - so we can override post request to make a delete or update request
 //------------------------------------
 
-// app.use(methodOverride('_method'))
+app.use(methodOverride('_method'))
 
 
 //ROUTES
@@ -55,6 +55,24 @@ app.get('/logs/new', (req, res) => {
     res.render('New')
 })
 
+//Delete
+app.delete('/logs/:id', (req, res) => {
+    Log.deleteOne({ _id: req.params.id }, (error, data) => {
+        res.redirect('/logs')
+    })
+})
+
+//Update
+app.put('/logs/:id', (req, res) => {
+    if (req.body.readyToEat === "on") {
+        req.body.readyToEat = true;
+      } else {
+        req.body.readyToEat = false;
+      }
+      Log.updateOne({_id: req.params.id}, req.body)
+      res.redirect('/logs/')
+})
+
 //Create
 app.post('/logs', (req, res) => {
     if (req.body.shipIsBroken === 'on') {
@@ -66,17 +84,29 @@ app.post('/logs', (req, res) => {
     res.redirect('/logs')
 })
 
+//Edit
+app.get('/logs/:id/edit', (req, res) => {
+    Log.findOne({ _id: req.params.id }, (error, foundLog) => {
+        if (error) {
+            res.json({error: error})
+        } else {
+            res.render('Edit', {
+                log: foundLog
+            })
+        }
+    })
+})
 
 //Show
 app.get('/logs/:id', (req, res) => {
     Log.findOne({ _id: req.params.id }, (error, foundLog) => {
-        res.render("logs/Show", {
+        res.render("Show", {
             log: foundLog
         })
     })
 })
 
 const PORT = process.env.PORT  //grabs the PORT variable from the .env file
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`)
 })
